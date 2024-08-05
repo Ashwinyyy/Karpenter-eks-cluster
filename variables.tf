@@ -17,7 +17,7 @@ variable "desired_capacity" {
 
 variable "max_capacity" {
   type    = number
-  default = 2
+  default = 3
 }
 
 variable "min_capacity" {
@@ -27,7 +27,7 @@ variable "min_capacity" {
 
 variable "ssh_key_name" {
   type    = string
-  default = "saransasthaohio.pem"
+  default = "saransasthaohio"
 }
 
 variable "subnet_ids" {
