@@ -102,3 +102,15 @@ resource "aws_eks_node_group" "eks_node_group" {
     aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly,
   ]
 }
+
+output "eks_cluster_id" {
+  value = aws_eks_cluster.eks_cluster.id
+}
+
+output "eks_cluster_endpoint" {
+  value = aws_eks_cluster.eks_cluster.endpoint
+}
+
+output "eks_cluster_version" {
+  value = aws_eks_cluster.eks_cluster.version
+}
