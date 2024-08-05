@@ -101,6 +101,3 @@ resource "aws_eks_node_group" "eks_node_group" {
   ]
 }
 
-output "eks_cluster_id" {
-  value = aws_eks_cluster.eks_cluster.id
-}
