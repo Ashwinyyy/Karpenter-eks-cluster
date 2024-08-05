@@ -2,38 +2,16 @@ provider "aws" {
   region = "us-east-2"
 }
 
-resource "aws_eks_cluster" "sara_demo_eks_cluster" {
-  name     = "sara-demo-eks-cluster"
-  role_arn = aws_iam_role.eks_cluster_role.arn
-
-  vpc_config {
-    subnet_ids = [aws_subnet.tf_pub1.id, aws_subnet.tf_pub2.id]
-    security_group_ids = [aws_security_group.ec2_sg.id]
-  }
-
-  depends_on = [
-    aws_iam_role_policy_attachment.eks_cluster_AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.eks_cluster_AmazonEKSVPCResourceController,
-  ]
+data "aws_subnet" "tf_pub1" {
+  id = "subnet-07b275afa3388452d"
 }
 
-resource "aws_eks_node_group" "sara_demo_eks_node_group" {
-  cluster_name    = aws_eks_cluster.sara_demo_eks_cluster.name
-  node_group_name = "sara-demo-eks-node"
-  node_role_arn   = aws_iam_role.eks_node_group_role.arn
-  subnet_ids      = [aws_subnet.tf_pub1.id, aws_subnet.tf_pub2.id]
+data "aws_subnet" "tf_pub2" {
+  id = "subnet-091ff436aaf3eefcb"
+}
 
-  scaling_config {
-    desired_size = 1
-    max_size     = 2
-    min_size     = 1
-  }
-
-  depends_on = [
-    aws_iam_role_policy_attachment.eks_node_group_AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.eks_node_group_AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.eks_node_group_AmazonEC2ContainerRegistryReadOnly,
-  ]
+data "aws_security_group" "ec2_sg" {
+  id = "sg-0fda6a8acba9fe447"
 }
 
 resource "aws_iam_role" "eks_cluster_role" {
@@ -61,6 +39,21 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSClusterPolicy" {
 resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSVPCResourceController" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
   role       = aws_iam_role.eks_cluster_role.name
+}
+
+resource "aws_eks_cluster" "sara_demo_eks_cluster" {
+  name     = "sara-demo-eks-cluster"
+  role_arn = aws_iam_role.eks_cluster_role.arn
+
+  vpc_config {
+    subnet_ids = [data.aws_subnet.tf_pub1.id, data.aws_subnet.tf_pub2.id]
+    security_group_ids = [data.aws_security_group.ec2_sg.id]
+  }
+
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_cluster_AmazonEKSClusterPolicy,
+    aws_iam_role_policy_attachment.eks_cluster_AmazonEKSVPCResourceController,
+  ]
 }
 
 resource "aws_iam_role" "eks_node_group_role" {
@@ -95,14 +88,21 @@ resource "aws_iam_role_policy_attachment" "eks_node_group_AmazonEC2ContainerRegi
   role       = aws_iam_role.eks_node_group_role.name
 }
 
-data "aws_subnet" "tf_pub1" {
-  id = "subnet-07b275afa3388452d"
-}
+resource "aws_eks_node_group" "sara_demo_eks_node_group" {
+  cluster_name    = aws_eks_cluster.sara_demo_eks_cluster.name
+  node_group_name = "sara-demo-eks-node"
+  node_role_arn   = aws_iam_role.eks_node_group_role.arn
+  subnet_ids      = [data.aws_subnet.tf_pub1.id, data.aws_subnet.tf_pub2.id]
 
-data "aws_subnet" "tf_pub2" {
-  id = "subnet-091ff436aaf3eefcb"
-}
+  scaling_config {
+    desired_size = 1
+    max_size     = 2
+    min_size     = 1
+  }
 
-data "aws_security_group" "ec2_sg" {
-  id = "sg-0fda6a8acba9fe447"
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_node_group_AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.eks_node_group_AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.eks_node_group_AmazonEC2ContainerRegistryReadOnly,
+  ]
 }
