@@ -2,6 +2,7 @@ provider "aws" {
   region = "us-east-2"
 }
 
+# EKS Cluster IAM Role
 resource "aws_iam_role" "eks_cluster_role" {
   name = "eks-cluster-role"
 
@@ -24,6 +25,12 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSClusterPolicy" {
   role       = aws_iam_role.eks_cluster_role.name
 }
 
+resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSVPCResourceController" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+  role       = aws_iam_role.eks_cluster_role.name
+}
+
+# EKS Cluster
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.eks_cluster_name
   role_arn = aws_iam_role.eks_cluster_role.arn
@@ -32,15 +39,13 @@ resource "aws_eks_cluster" "eks_cluster" {
     subnet_ids = var.subnet_ids
   }
 
-  lifecycle {
-    prevent_destroy = true  # Prevent accidental deletion
-  }
-
   depends_on = [
     aws_iam_role_policy_attachment.eks_cluster_AmazonEKSClusterPolicy,
+    aws_iam_role_policy_attachment.eks_cluster_AmazonEKSVPCResourceController,
   ]
 }
 
+# EKS Node IAM Role
 resource "aws_iam_role" "eks_node_role" {
   name = "eks-node-role"
 
@@ -56,11 +61,6 @@ resource "aws_iam_role" "eks_node_role" {
       }
     ]
   })
-
-  lifecycle {
-    ignore_changes = [assume_role_policy]  # Ignore changes to the assume role policy
-    prevent_destroy = true  # Prevent accidental deletion
-  }
 }
 
 resource "aws_iam_role_policy_attachment" "AmazonEKSWorkerNodePolicy" {
@@ -78,6 +78,7 @@ resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerRegistryReadOnly" {
   role       = aws_iam_role.eks_node_role.name
 }
 
+# EKS Node Group
 resource "aws_eks_node_group" "eks_node_group" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = var.node_group_name
@@ -101,3 +102,6 @@ resource "aws_eks_node_group" "eks_node_group" {
   ]
 }
 
+output "eks_cluster_id" {
+  value = aws_eks_cluster.eks_cluster.id
+}
