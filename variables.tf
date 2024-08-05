@@ -11,23 +11,27 @@ variable "node_group_name" {
 }
 
 variable "desired_capacity" {
-  type    = number
-  default = 3
+  description = "The desired number of instances in the node group"
+  type        = number
+  default     = 3
 }
 
 variable "max_capacity" {
-  type    = number
-  default = 2
+  description = "The maximum number of instances in the node group"
+  type        = number
+  default     = 2
 }
 
 variable "min_capacity" {
-  type    = number
-  default = 1
+  description = "The minimum number of instances in the node group"
+  type        = number
+  default     = 1
 }
 
 variable "ssh_key_name" {
-  type    = string
-  default = "saransasthaohio.pem"
+  description = "The name of the SSH key pair to use for the node group"
+  type        = string
+  default     = "saransasthaohio"  # SSH key name without .pem extension
 }
 
 variable "subnet_ids" {
