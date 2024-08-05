@@ -33,5 +33,5 @@ variable "ssh_key_name" {
 variable "subnet_ids" {
   description = "A list of subnet IDs"
   type        = list(string)
-  default     = []
+  default     = ["subnet-07b275afa3388452d", "subnet-091ff436aaf3eefcb"]
 }
