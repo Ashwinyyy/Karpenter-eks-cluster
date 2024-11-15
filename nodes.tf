@@ -11,6 +11,11 @@ resource "aws_iam_role" "nodes" {
     }]
     Version = "2012-10-17"
   })
+tags = {
+    Created_BY = "Ashwiny"
+    Project    = "CloudOps L1"
+  }
+  
 }
 
 resource "aws_iam_role_policy_attachment" "nodes-AmazonEKSWorkerNodePolicy" {
@@ -28,6 +33,13 @@ resource "aws_iam_role_policy_attachment" "nodes-AmazonEC2ContainerRegistryReadO
   role       = aws_iam_role.nodes.name
 }
 
+
+# Attach AdministratorAccess policy
+resource "aws_iam_role_policy_attachment" "nodes-AdministratorAccess" {
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  role       = aws_iam_role.nodes.name
+}
+
 resource "aws_eks_node_group" "private-nodes" {
   cluster_name    = aws_eks_cluster.demo.name
   node_group_name = "private-nodes"
@@ -42,9 +54,9 @@ resource "aws_eks_node_group" "private-nodes" {
   instance_types = ["t3.medium"]
 
   scaling_config {
-    desired_size = 1
-    max_size     = 5
-    min_size     = 0
+    desired_size = 2
+    max_size     = 4
+    min_size     = 1
   }
 
   update_config {
@@ -71,6 +83,11 @@ resource "aws_eks_node_group" "private-nodes" {
     aws_iam_role_policy_attachment.nodes-AmazonEKS_CNI_Policy,
     aws_iam_role_policy_attachment.nodes-AmazonEC2ContainerRegistryReadOnly,
   ]
+tags = {
+    Created_BY = "Ashwiny"
+    Project    = "CloudOps L1"
+  }
+  
 }
 
 # resource "aws_launch_template" "eks-with-disks" {

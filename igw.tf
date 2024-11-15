@@ -3,5 +3,8 @@ resource "aws_internet_gateway" "igw" {
 
   tags = {
     Name = "igw"
+    Created_BY = "Ashwiny"
+    Project    = "CloudOps L1"
   }
-}
+
+ }

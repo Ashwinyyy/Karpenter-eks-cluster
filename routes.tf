@@ -5,9 +5,11 @@ resource "aws_route_table" "private" {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat.id
   }
-
+  
   tags = {
     Name = "private"
+    Created_BY = "Ashwiny"
+    Project    = "CloudOps L1"
   }
 }
 
@@ -21,6 +23,8 @@ resource "aws_route_table" "public" {
 
   tags = {
     Name = "public"
+    Created_BY = "Ashwiny"
+    Project    = "CloudOps L1"
   }
 }
 

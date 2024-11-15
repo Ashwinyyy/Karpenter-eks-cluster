@@ -3,5 +3,7 @@ resource "aws_vpc" "main" {
 
   tags = {
     Name = "main"
+    Created_BY = "Ashwiny"
+    Project    = "CloudOps L1"
   }
 }

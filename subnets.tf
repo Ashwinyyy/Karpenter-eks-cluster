@@ -7,6 +7,8 @@ resource "aws_subnet" "private-us-east-2a" {
     "Name"                            = "private-us-east-2a"
     "kubernetes.io/role/internal-elb" = "1"
     "kubernetes.io/cluster/demo"      = "owned"
+    Created_BY = "Ashwiny"
+    Project    = "CloudOps L1"
   }
 }
 
@@ -19,6 +21,8 @@ resource "aws_subnet" "private-us-east-2b" {
     "Name"                            = "private-us-east-2b"
     "kubernetes.io/role/internal-elb" = "1"
     "kubernetes.io/cluster/demo"      = "owned"
+    Created_BY = "Ashwiny"
+    Project    = "CloudOps L1"
   }
 }
 
@@ -32,6 +36,8 @@ resource "aws_subnet" "public-us-east-2a" {
     "Name"                       = "public-us-east-2a"
     "kubernetes.io/role/elb"     = "1"
     "kubernetes.io/cluster/demo" = "owned"
+    Created_BY = "Ashwiny"
+    Project    = "CloudOps L1"
   }
 }
 
@@ -45,5 +51,7 @@ resource "aws_subnet" "public-us-east-2b" {
     "Name"                       = "public-us-east-2b"
     "kubernetes.io/role/elb"     = "1"
     "kubernetes.io/cluster/demo" = "owned"
+    Created_BY = "Ashwiny"
+    Project    = "CloudOps L1"
   }
 }
